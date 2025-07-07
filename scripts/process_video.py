@@ -111,6 +111,28 @@ def trim_video_for_short(input_path, output_path, max_duration_seconds=60, clip_
         twitch_icon_path = os.path.join(assets_dir, 'twitch_icon.png')
         custom_background_image_path = os.path.join(assets_dir, 'fond_short.png')
         end_short_video_path = os.path.join(assets_dir, 'fin_de_short.mp4') # Chemin de ta vidéo de fin
+
+        # --- NOUVEAU: Définition des chemins de police ---
+        # Méthode 1: Utiliser une police par défaut fiable sur la plupart des systèmes Linux/macOS
+        # font_path_regular = "DejaVuSans" 
+        # font_path_bold = "DejaVuSans-Bold"
+
+        # Méthode 2: Utiliser un chemin vers une police .ttf que tu places dans ton dossier 'assets'
+        # Assure-toi d'avoir un fichier comme 'ArialBold.ttf' ou 'Roboto-Bold.ttf' dans ton dossier 'assets'
+        font_path_regular = os.path.join(assets_dir, 'LibertinusMath-Regular.ttf') # Exemple
+        font_path_bold = os.path.join(assets_dir, 'LibertinusMath-Regular.ttf')       # Exemple
+
+        # Si les fichiers de police ne sont pas trouvés, on utilise les polices par défaut de MoviePy
+        if not os.path.exists(font_path_regular):
+            print(f"⚠️ Police '{font_path_regular}' non trouvée. Utilisation de la police par défaut de MoviePy pour le texte normal.")
+            font_path_regular = "sans" # Police par défaut de MoviePy
+        if not os.path.exists(font_path_bold):
+            print(f"⚠️ Police '{font_path_bold}' non trouvée. Utilisation de la police par défaut de MoviePy (bold) pour les titres.")
+            font_path_bold = "sans" # MoviePy tentera d'utiliser une version bold si "sans" est spécifié et une est dispo.
+
+        # Tu peux décommenter et utiliser la méthode 1 si tu es sûr de ton environnement.
+        # Sinon, la méthode 2 (fournir des fichiers .ttf) est la plus robuste.
+
         # --- FIN DE LA DÉFINITION DES CHEMINS ---
 
         all_video_elements = [] # Liste pour tous les éléments vidéo à composer
@@ -163,21 +185,14 @@ def trim_video_for_short(input_path, output_path, max_duration_seconds=60, clip_
         title_text = clip_data.get('title', 'Titre du clip')
         streamer_name = clip_data.get('broadcaster_name', 'Nom du streamer')
 
-        font_path = "Arial" # Anciennement DejaVuSans-Bold
-        try:
-            from PIL import ImageFont
-            ImageFont.truetype(font_path, 10)
-        except Exception:
-            print(f"⚠️ Police '{font_path}' non trouvée ou non valide. Utilisation de la police par défaut de MoviePy.")
-            font_path = "sans"
-
+        # --- Utilise font_path_bold pour le titre du clip ---
         text_color = "white"
         stroke_color = "black"
         stroke_width = 1.5
         
         # Ajustements pour le titre : positionné un peu plus bas que le bord supérieur
         title_clip = TextClip(title_text, fontsize=70, color=text_color,
-                              font=font_path, stroke_color=stroke_color, stroke_width=stroke_width,
+                              font=font_path_bold, stroke_color=stroke_color, stroke_width=stroke_width, # <--- ICI : Utilise font_path_bold
                               size=(target_width * 0.9, None), # Texte sur 90% de la largeur
                               method='caption') \
                      .set_duration(duration) \
@@ -187,9 +202,9 @@ def trim_video_for_short(input_path, output_path, max_duration_seconds=60, clip_
         # target_height * 0.92 place le HAUT du texte à 92% de la hauteur.
         # Soustraire 40 (taille approximative de la police) assure que le bas du texte est visible.
         streamer_clip = TextClip(f"@{streamer_name}", fontsize=40, color=text_color,
-                                 font=font_path, stroke_color=stroke_color, stroke_width=stroke_width) \
+                                 font=font_path_regular, stroke_color=stroke_color, stroke_width=stroke_width) \
                         .set_duration(duration) \
-                        .set_position(("center", int(target_height * 0.92) - 40)) 
+                        .set_position(("center", int(target_height * 0.80) - 40)) 
         
         # Logique de l'icône Twitch (maintenue pour la complétude, même si tu la désactives)
         twitch_icon_clip = None
