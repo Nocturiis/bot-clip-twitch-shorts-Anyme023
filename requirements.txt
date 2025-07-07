@@ -1,0 +1,7 @@
+requests
+yt-dlp
+google-api-python-client
+google-auth-httplib2
+google-auth-oauthlib
+moviepy==1.0.3
+Pillow==9.5.0
