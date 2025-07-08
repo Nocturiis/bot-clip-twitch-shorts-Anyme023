@@ -119,8 +119,8 @@ def trim_video_for_short(input_path, output_path, max_duration_seconds=60, clip_
 
         # Méthode 2: Utiliser un chemin vers une police .ttf que tu places dans ton dossier 'assets'
         # Assure-toi d'avoir un fichier comme 'ArialBold.ttf' ou 'Roboto-Bold.ttf' dans ton dossier 'assets'
-        font_path_regular = os.path.join(assets_dir, 'LibertinusMath-Regular.ttf') # Exemple
-        font_path_bold = os.path.join(assets_dir, 'LibertinusMath-Regular.ttf')       # Exemple
+        font_path_regular = os.path.join(assets_dir, 'Roboto-Regular.ttf') # Exemple
+        font_path_bold = os.path.join(assets_dir, 'Roboto-Bold.ttf')       # Exemple
 
         # Si les fichiers de police ne sont pas trouvés, on utilise les polices par défaut de MoviePy
         if not os.path.exists(font_path_regular):
@@ -174,7 +174,7 @@ def trim_video_for_short(input_path, output_path, max_duration_seconds=60, clip_
         if not found_webcam_and_cropped:
             all_video_elements.append(background_clip.set_position(("center", "center")))
             main_video_clip = clip.copy()
-            main_video_display_width = int(target_width * 1.4) # Facteur de zoom 1.4
+            main_video_display_width = int(target_width * 2) # Facteur de zoom 2
             main_video_clip = moviepy_resize(main_video_clip, width=main_video_display_width)
             main_video_clip = main_video_clip.fx(even_size)
 
@@ -204,7 +204,7 @@ def trim_video_for_short(input_path, output_path, max_duration_seconds=60, clip_
         streamer_clip = TextClip(f"@{streamer_name}", fontsize=40, color=text_color,
                                  font=font_path_regular, stroke_color=stroke_color, stroke_width=stroke_width) \
                         .set_duration(duration) \
-                        .set_position(("center", int(target_height * 0.80) - 40)) 
+                        .set_position(("center", int(target_height * 0.85) - 40)) 
         
         # Logique de l'icône Twitch (maintenue pour la complétude, même si tu la désactives)
         twitch_icon_clip = None
